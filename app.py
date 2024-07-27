@@ -11,7 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import Equipo, Modelo, Marca, Fabricante, Pais, Caracteristica, Proveedor, Stock, Accesorio, Persona
+from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante
 
 @app.route('/')
 def index():
