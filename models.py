@@ -14,6 +14,18 @@ class Tipo(db.Model):
     def _str_(self):
         return self.nombre """
 
+class Pais(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    
+    def __str__(self) -> str:
+        return f"Pais {self.nombre}"
+    
+class Fabricante(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    pais_id = db.Column(db.Integer, db.ForeignKey('pais.id'), nullable=False)
+    
 class Equipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
@@ -30,18 +42,6 @@ class Marca(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     categoria = db.Column(db.String(50), nullable=False)
 
-class Pais(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    
-    def __str__(self) -> str:
-        return f"Pais {self.nombre}"
-
-class Fabricante(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    pais_id = db.Column(db.Integer, db.ForeignKey('pais.id'), nullable=False)
- 
 class Caracteristica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     caracteristicas = db.Column(db.String(100), nullable=False)

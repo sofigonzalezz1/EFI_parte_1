@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -29,9 +29,18 @@ def accesorios():
 def caracteristicas():
     return render_template('caracteristica_list.html')
 
-@app.route('/fabricante_list')
+@app.route('/fabricante_list', methods=['POST', 'GET'])
 def fabricantes():
-    return render_template('fabricante_list.html')
+    fabricantes = Fabricante.query.all()
+    paises = Pais.query.all()
+    if request.method == 'POST':
+        fabricante_nombre = request.form['nombre']
+        pais_id = request.form['pais']
+        nuevo_fabricante = Fabricante(nombre=fabricante_nombre, pais_id=pais_id)
+        db.session.add(nuevo_fabricante)
+        db.session.commit()
+        return redirect(url_for('fabricantes'))
+    return render_template('fabricante_list.html', fabricantes=fabricantes, paises=paises)
 
 @app.route('/marca_list')
 def marcas():

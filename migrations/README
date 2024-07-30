@@ -1,1 +1,40 @@
 Single-database configuration for Flask.
+
+# Sistema administativo para negocio de celulares
+
+## Descripción
+Este proyecto es una aplicación web para administrar un negocio de celulares utilizando Flask, Flask-SQLAlchemy, and Flask-Migrate.
+
+## Installación
+1. Clonar el repositorio:
+   
+   git clone https://github.com/sofigonzalezz1/EFI_parte_1.git
+
+2. Crear y activar un entorno virtual:
+
+    python -m venv venv
+
+    source venv/bin/activate  # En Windows usar `venv\Scripts\activate`
+
+3. Instalar dependencias:
+
+    pip install -r requirements.txt
+
+4. Establecer la base de datos:
+
+    flask db init
+    flask db migrate -m "Initial migration"
+    flask db upgrade
+
+5. Correr la apicación:
+
+    flask run
+
+6. Utilización:
+
+    navegar a:  http://localhost:5000 para acceder a la applicación.
+
+
+Licencia: Itec Rio Cuarto 2024 para la cátedra de prácticas profesionalizantes en python
+Profesor Titular: Matías Lucero
+Alumnos: Gonzalez Sofia, Ravinale Axel, Reartes Imanol
