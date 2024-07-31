@@ -11,7 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante
+from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo
 
 @app.route('/')
 def index():
@@ -54,7 +54,18 @@ def modelos():
 def proveedores():
     return render_template('proveedor_list.html')
 
-@app.route('/stock')
+@app.route('/stock', methods=['GET', 'POST'])
 def stock():
-    return render_template('stock.html')
+    equipos = Equipo.query.all()
+    stocks = Stock.query.all()
+    if request.method == 'POST':
+        equipo_id = request.form['equipo_id']
+        cantidad_disponible = request.form['cantidad_disponible']
+        cantidad_minima = request.form['cantidad_minima']
+        ubicacion_almacen = request.form['ubicacion_almacen']
+        nuevo_stock = Stock(cantidad_disponible=cantidad_disponible, cantidad_minima=cantidad_minima, ubicacion_almacen=ubicacion_almacen)
+        db.session.add(nuevo_stock)
+        db.session.commit()
+        return redirect(url_for('stock'))
+    return render_template('stock.html', stocks=stocks, equipos=equipos)
 
