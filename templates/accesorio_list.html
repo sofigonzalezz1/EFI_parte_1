@@ -6,13 +6,13 @@
         <tr>
             <th>ID</th>
             <th>Accesorios</th>
-            <th>Compatibilidad/th>
+            <th>Compatibilidad</th>
         </tr>
         {% for accesorio in Accesorios %}
         <tr>
-            <td>{{ accesorio.id }}</td>
             <td>{{ accesorio.accesorios }}</td>
             <td>{{ 'Compatible' if accesorio.compatibilidad else 'No compatible' }}</td>
         </tr>
         {% endfor %}
     </table>
+{% endblock %}

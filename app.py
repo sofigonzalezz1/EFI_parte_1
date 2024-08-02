@@ -21,12 +21,19 @@ def index():
 def equipos():
     return render_template('equipos_list.html')
 
-@app.route('/accesorio_list')
+@app.route('/accesorio_list', methods=['POST', 'GET'])
 def accesorios():
-    return render_template('accesorio_list.html')
+    accesorios = Accesorio.query.all()
+    compatible=True
+    if request.method == 'POST':
+        for accesorio in accesorios:
+            if not accesorio.compatibilidad:
+                compatible = False
+    return render_template('accesorio_list.html', accesorio=accesorios, compatible=compatible)
 
-@app.route('/caracteristica_list')
+@app.route('/caracteristica_list', methods=['POST', 'GET'])
 def caracteristicas():
+    caracteristicas = Caracteristica.query.all()
     return render_template('caracteristica_list.html')
 
 @app.route('/fabricante_list', methods=['POST', 'GET'])
