@@ -1,1 +1,24 @@
-{% extends "base_template.html" %}
+{% extends 'base_template.html' %}
+
+{% block content %}
+<div class = "conteiner">
+    <div class= "row">
+        <div class="col-6">
+            <h4> Crear una nueva marca</h4>
+            <form action="" method="post">
+                <input type="text" name="nombre" class="form-control nb-2" placeholder="Nombre de la Marca"><!--nb-2 agrega margen-->
+                <button type="submit" class="btn btn success">Guardar</button>
+                <select name="fabricante:id" class="form-control mb-2">
+                
+                {% for fabricante in fabricantes %}
+                    <option value="{{ fabricante.id }}">{{ fabricante.nombre }}</option>
+                {% endfor %}
+
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock  %}

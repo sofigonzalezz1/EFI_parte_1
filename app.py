@@ -11,14 +11,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo
+from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/equipos_list')
+@app.route('/equipos_list', methods=["POST","GET"])
 def equipos():
+    equipos = Equipo.query.all()
     return render_template('equipos_list.html')
 
 @app.route('/accesorio_list')
@@ -42,13 +43,34 @@ def fabricantes():
         return redirect(url_for('fabricantes'))
     return render_template('fabricante_list.html', fabricantes=fabricantes, paises=paises)
 
-@app.route('/marca_list')
+@app.route('/marca_list', methods=["POST","GET"])
 def marcas():
-    return render_template('marca_list.html')
+    marcas = Marca.query.all()
+    fabricantes = Fabricante.query.all()
+    if request.method=="POST":
+        nombre = request.form["nombre"]
+        nueva_marca = Marca(nombre=nombre)
+        db.session.add(nueva_marca)
+        db.session.commit()
+        return redirect(url_for("marcas"))
+    return render_template('marca_list.html', marcas = marcas, fabricantes = fabricantes)
 
-@app.route('/modelo_list')
+@app.route('/modelo_list', methods=["POST","GET"])
 def modelos():
-    return render_template('modelo_list.html')
+    modelos = Modelo.query.all()
+    marcas = Marca.query.all()
+    if request.method=="POST":
+        nombre = request.form["nombre"]
+        anio = request.form["anio_fabricacion"]
+        modelo_nuevo = Modelo(
+            nombre = nombre,
+            anio_fabricacion = anio,
+        )
+        db.session.add(modelo_nuevo)
+        db.session.commit()
+        return redirect (url_for("modelos"))
+    return render_template('modelo_list.html', modelos = modelos, modelo_nuevo = modelo_nuevo, marcas = marcas)
+        
 
 @app.route('/proveedor_list')
 def proveedores():

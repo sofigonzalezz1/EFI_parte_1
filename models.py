@@ -1,18 +1,12 @@
 from app import db
 
-""" class Marca(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-
-    def _str_(self):
-        return self.nombre
     
 class Tipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
 
     def _str_(self):
-        return self.nombre """
+        return self.nombre 
 
 class Pais(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,11 +31,19 @@ class Equipo(db.Model):
 class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
-    fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
-
+    #fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
+    marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'), nullable=False)
+    marca = db.relationship("Marca", backref=db.backref("modelos", lazy=True))
+    
 class Marca(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
+    fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
+    fabricante = db.relationship("Fabricante", backref=db.backref("marcas", lazy=True))
+    
+    def __str__(self):
+        return self.nombre
 
 class Caracteristica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
