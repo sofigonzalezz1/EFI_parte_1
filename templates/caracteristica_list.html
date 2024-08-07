@@ -1,19 +1,48 @@
 {% extends "base_template.html" %}
 
 {% block content %}
-    <h1>Lista caracteristicas</h1>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Caracteristicas</th>
-            <th>Descripcion</th>
-        </tr>
-        {% for caracteristica in Caracteristicas %}
-        <tr>
-            <td>{{ caracteristica.id }}</td>
-            <td>{{ caracteristica.caracteristicas }}</td>
-            <td>{{ caracteristica.descripcion }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-{% endblock %}
+    <h1>Características del equipo</h1>
+
+    <form method="POST">
+        <label for="equipo">Seleccione un equipo:</label>
+        <select name="equipo_id" id="equipo" onchange="this.form.submit()">
+            <option value="">Seleccione un equipo</option>
+            {% for equipo in equipos %}
+                <option value="{{ equipo.id }}" {% if equipo.id == selected_equipo_id %}selected{% endif %}>
+                    {{ equipo.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if caracteristicas %}
+        <h2>Características del equipo seleccionado</h2>
+        <table>
+            <tr>
+                <th>Característica</th>
+                <th>Descripción</th>
+            </tr>
+            {% for caracteristica in caracteristicas %}
+            <tr>
+                <td>{{ caracteristica.caracteristicas }}</td>
+                <td>{{ caracteristica.descripcion }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay características disponibles para el equipo seleccionado.</p>
+    {% endif %}
+
+    {% if selected_equipo_id %}
+    <h2>Agregar nueva característica</h2>
+    <form method="POST">
+        <input type="hidden" name="equipo_id" value="{{ selected_equipo_id }}">
+        <input type="hidden" name="agregar_caracteristica" value="true">
+        <label for="nueva_caracteristica">Nueva característica:</label>
+        <input type="text" name="nueva_caracteristica" id="nueva_caracteristica" required>
+        <label for="descripcion">Descripción:</label>
+        <input type="text" name="descripcion" id="descripcion" required>
+        <button type="submit">Agregar</button>
+    </form>
+    {% endif %}
+    {% endblock %}

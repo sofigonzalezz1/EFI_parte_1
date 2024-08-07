@@ -23,18 +23,49 @@ def equipos():
 
 @app.route('/accesorio_list', methods=['POST', 'GET'])
 def accesorios():
+    equipos = Equipo.query.all()
     accesorios = Accesorio.query.all()
-    compatible=True
+
     if request.method == 'POST':
-        for accesorio in accesorios:
-            if not accesorio.compatibilidad:
-                compatible = False
-    return render_template('accesorio_list.html', accesorio=accesorios, compatible=compatible)
+        nombre = request.form.get('nombre')
+        compatibilidad = request.form.get('compatibilidad') == 'true'
+        equipo_id = request.form.get('Equipos')
+
+        nuevo_accesorio = Accesorio(
+            accesorio=nombre,
+            compatibilidad=compatibilidad,
+            equipo_id=equipo_id
+        )
+        db.session.add(nuevo_accesorio)
+        db.session.commit()
+
+        return redirect(url_for('accesorios'))
+
+    return render_template('accesorio_list.html', accesorios=accesorios, equipos=equipos)
 
 @app.route('/caracteristica_list', methods=['POST', 'GET'])
 def caracteristicas():
-    caracteristicas = Caracteristica.query.all()
-    return render_template('caracteristica_list.html')
+    equipos = Equipo.query.all()
+    caracteristicas = []
+    selected_equipo_id = None
+
+    if request.method == 'POST':
+        selected_equipo_id = request.form.get('equipo_id')
+        caracteristicas = Caracteristica.query.filter_by(equipo_id=selected_equipo_id).all()
+        
+        if 'agregar_caracteristica' in request.form:
+            nueva_caracteristica = request.form.get('nueva_caracteristica')
+            descripcion = request.form.get('descripcion')
+            nueva_caracteristica_entry = Caracteristica(
+                equipo_id=selected_equipo_id,
+                caracteristicas=nueva_caracteristica,
+                descripcion=descripcion
+            )
+            db.session.add(nueva_caracteristica_entry)
+            db.session.commit()
+            caracteristicas = Caracteristica.query.filter_by(equipo_id=selected_equipo_id).all()
+
+    return render_template('caracteristica_list.html', equipos=equipos, caracteristicas=caracteristicas, selected_equipo_id=selected_equipo_id)
 
 @app.route('/fabricante_list', methods=['POST', 'GET'])
 def fabricantes():
