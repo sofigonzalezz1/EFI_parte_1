@@ -31,7 +31,6 @@ class Equipo(db.Model):
 class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
-    #fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'), nullable=False)
     marca = db.relationship("Marca", backref=db.backref("modelos", lazy=True))
     
@@ -60,8 +59,20 @@ class Stock(db.Model):
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     persona_id = db.Column(db.Integer, db.ForeignKey('persona.id'), nullable=False)
-    contacto = db.Column(db.String(100), nullable=False)
+    razon_social = db.Column(db.String(100), nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
+    mail = db.Column(db.String(100), nullable=False)
+    cuit = db.Column(db.String(20), nullable=False)
+    condicion_iva_id = db.Column(db.String(20), nullable=False)
+    producto = db.Column(db.String(20), nullable=False)
+    
+class condicion_iva(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(100), nullable=False)
+    
+class producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tipo = db.Column(db.String(100), nullable=False)
     
 class Accesorio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
