@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -142,31 +142,47 @@ def modelos():
         
 
 @app.route('/proveedor_list', methods=["POST","GET"])
-def proveedores():
+def proveedor_list():
+    if request.method == 'POST':
+        if 'agregar' in request.form:
+            nueva_razon_social = request.form['razon_social']
+            nuevo_telefono = request.form['telefono']
+            nuevo_mail = request.form['mail']
+            nuevo_cuit = request.form['cuit']
+            nuevo_proveedor = Proveedor(
+                razon_social=nueva_razon_social,
+                telefono=nuevo_telefono,
+                mail=nuevo_mail,
+                cuit=nuevo_cuit,
+            )
+            db.session.add(nuevo_proveedor)
+            db.session.commit()
+            flash('Proveedor agregado exitosamente.')
+
+        # Acción de editar
+        elif 'editar' in request.form:
+            proveedor_id = request.form['proveedor_id']
+            proveedor = Proveedor.query.get(proveedor_id)
+            proveedor.razon_social = request.form['razon_social']
+            proveedor.telefono = request.form['telefono']
+            proveedor.mail = request.form['mail']
+            proveedor.cuit = request.form['cuit']
+            db.session.commit()
+            flash('Proveedor actualizado exitosamente.')
+
+        # Acción de eliminar
+        elif 'eliminar' in request.form:
+            proveedor_id = request.form['proveedor_id']
+            proveedor = Proveedor.query.get(proveedor_id)
+            db.session.delete(proveedor)
+            db.session.commit()
+            flash('Proveedor eliminado exitosamente.')
+
+        return redirect(url_for('proveedores_list'))
+
+    # Acción de ver (GET request)
     proveedores = Proveedor.query.all()
-    personas = Persona.query.all()
-    
-    if request.method == "POST":
-        persona = request.form["persona"]
-        razon_social = request.form["nombre"]
-        telefono = request.form["telefono"]
-        mail = request.form["contacto"]
-        cuit=request.form["cuit"] 
-        condicion_iva= request.form["condicion_iva"]
-        producto= request.form["producto"]
-        proveedor_nuevo=Proveedor(
-            persona=persona,
-            razon_social=razon_social,
-            telefono=telefono,
-            mail=mail,
-            cuit=cuit,
-            condicion_iva=condicion_iva,
-            producto=producto,
-        )
-        db.session.add(proveedor_nuevo)
-        db.session.commit()
-        return redirect(url_for("proveedores"))
-    return render_template('proveedor_list.html', proveedores = proveedores, personas = personas)
+    return render_template('proveedor_list.html', proveedores=proveedores)
 
 
 @app.route('/stock', methods=['GET', 'POST'])

@@ -1,31 +1,74 @@
 {% extends 'base_template.html' %}
 
 {% block content %}
-<div class = "conteiner">
-    <div class= "row">
-        <div class="col-6">
-            <h4> Crear una nuevo proveedor</h4>
-            <form action="" method="post">
-                <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre del proveedor"><!--nb-2 agrega margen-->
-                <select name="fabricante:id" class="form-control mb-2">
-                
-                {% for marca in marcas %}
-                    <option value="{{ marca.id }}">{{ marca.fabricante.nombre }}</option>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proveedores</title>
+    <!-- Agregar aquí tu CSS y otros recursos -->
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Proveedores</h1>
+        <!-- Tabla de proveedores -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Razón Social</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>CUIT</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor in proveedores %}
+                <tr>
+                    <td>{{ proveedor.razon_social }}</td>
+                    <td>{{ proveedor.telefono }}</td>
+                    <td>{{ proveedor.mail }}</td>
+                    <td>{{ proveedor.cuit }}</td>
+                    <td>
+                        <form action="{{ url_for('editar_proveedor', id=proveedor.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Editar</button>
+                        </form>
+                        <form action="{{ url_for('eliminar_proveedor', id=proveedor.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endfor %}
-
-                </select>
-
-                <button type="submit" class="btn btn-success">Guardar</button>
-            </form>
-        </div>
-        <div class="col-6">
-            <h4>Listado de Vehiculos</h4>
-            {% for proveedor in proveedores %}
-                <li> {{proveedor.nombre}}-{{proveedor.marca}}</li>
-            {% endfor %}
-        </div>
-    </div>
-</div>
+            </tbody>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <h2>Agregar nuevo proveedor</h2>
+        <form action="{{ url_for('agregar_proveedor') }}" method="POST">
+            <label for="razon_social">Razón Social:</label>
+            <input type="text" id="razon_social" name="razon_social" required><br>
+    
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" required><br>
+    
+            <label for="mail">Email:</label>
+            <input type="email" id="mail" name="mail" required><br>
+    
+            <label for="cuit">CUIT:</label>
+            <input type="text" id="cuit" name="cuit" required><br>
+    
+            <button type="submit">Agregar Proveedor</button>
+        </form>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</body>
 
 
 {% endblock  %}

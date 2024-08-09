@@ -63,9 +63,6 @@ class Proveedor(db.Model):
     telefono = db.Column(db.String(20), nullable=False)
     mail = db.Column(db.String(100), nullable=False)
     cuit = db.Column(db.String(20), nullable=False)
-    condicion_iva_id = db.Column(db.String(20), nullable=False)
-    producto = db.Column(db.String(20), nullable=False)
-    
 class condicion_iva(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.String(100), nullable=False)
