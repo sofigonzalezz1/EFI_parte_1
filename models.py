@@ -47,7 +47,7 @@ class Caracteristica(db.Model):
     equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
     caracteristicas = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.String(150), nullable=False)
-    equipo = db.relationship('Equipo', backref=db.backref('caracteristicas', lazy=True))
+
 
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -79,7 +79,7 @@ class Accesorio(db.Model):
     equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
     accesorio = db.Column(db.String(100), nullable=False)
     compatibilidad = db.Column(db.Boolean)
-    equipo = db.relationship('Equipo', backref=db.backref('accesorios', lazy=True))
+
 
 class Persona(db.Model):
     id = db.Column(db.Integer, primary_key=True)
