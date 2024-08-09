@@ -58,7 +58,7 @@ class Stock(db.Model):
 
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    persona_id = db.Column(db.Integer, db.ForeignKey('persona.id'), nullable=False)
+    persona_id = db.Column(db.Integer, db.ForeignKey('persona.id'), nullable=True)
     razon_social = db.Column(db.String(100), nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
     mail = db.Column(db.String(100), nullable=False)
