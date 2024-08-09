@@ -92,13 +92,14 @@ def marcas():
     fabricantes = Fabricante.query.all()
     if request.method=="POST":
         nombre = request.form["nombre"]
+        categoria = request.form["categoria"]
         fabricante_id = request.form["fabricante_id"]
-        if not nombre or not fabricante_id:
+        if not nombre or not categoria or not fabricante_id:
             return "Datos incompletos", 400
         
         try:
             fabricante_id = int(fabricante_id)  # Asegurarse de que el ID del fabricante es un entero
-            nueva_marca = Marca(nombre=nombre, fabricante_id=fabricante_id)
+            nueva_marca = Marca(nombre=nombre, categoria=categoria, fabricante_id=fabricante_id)
             db.session.add(nueva_marca)
             db.session.commit()
         except Exception as e:
@@ -114,14 +115,32 @@ def modelos():
     if request.method=="POST":
         nombre = request.form["nombre"]
         anio = request.form["anio_fabricacion"]
-        modelo_nuevo = Modelo(
-            nombre = nombre,
-            anio_fabricacion = anio,
-        )
-        db.session.add(modelo_nuevo)
-        db.session.commit()
-        return redirect (url_for("modelos"))
-    return render_template('modelo_list.html', modelos = modelos, marcas = marcas)
+        marca_id = request.form["marca_id"]
+
+        print(f"Datos recibidos: nombre={nombre}, anio_fabricacion={anio}, marca_id={marca_id}")
+
+        if not nombre or not marca_id:
+            return "Datos incompletos", 400
+        try:
+            marca_id = int(marca_id)
+            marca = Marca.query.get(marca_id)
+            if not marca:
+                return "Marca no existe", 400
+            
+            modelo_nuevo = Modelo(
+                nombre=nombre,
+                anio_fabricacion=anio,
+                marca_id=marca_id
+            )
+            db.session.add(modelo_nuevo)
+            db.session.commit()
+            return redirect(url_for("modelos"))
+
+        except Exception as e:
+            db.session.rollback()
+            return f"Error al crear el modelo: {str(e)}", 400
+    
+    return render_template('modelo_list.html', modelos=modelos, marcas=marcas)
         
 
 @app.route('/proveedor_list', methods=["POST","GET"])
