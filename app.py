@@ -143,8 +143,8 @@ def modelos():
 
 @app.route('/proveedor_list', methods=["POST","GET"])
 def proveedor_list():
+    proveedores = Proveedor.query.all()
     if request.method == 'POST':
-        if 'agregar' in request.form:
             nueva_razon_social = request.form['razon_social']
             nuevo_telefono = request.form['telefono']
             nuevo_mail = request.form['mail']
@@ -157,33 +157,27 @@ def proveedor_list():
             )
             db.session.add(nuevo_proveedor)
             db.session.commit()
-            flash('Proveedor agregado exitosamente.')
-
-        # Acción de editar
-        elif 'editar' in request.form:
-            proveedor_id = request.form['proveedor_id']
-            proveedor = Proveedor.query.get(proveedor_id)
-            proveedor.razon_social = request.form['razon_social']
-            proveedor.telefono = request.form['telefono']
-            proveedor.mail = request.form['mail']
-            proveedor.cuit = request.form['cuit']
-            db.session.commit()
-            flash('Proveedor actualizado exitosamente.')
-
-        # Acción de eliminar
-        elif 'eliminar' in request.form:
-            proveedor_id = request.form['proveedor_id']
-            proveedor = Proveedor.query.get(proveedor_id)
-            db.session.delete(proveedor)
-            db.session.commit()
-            flash('Proveedor eliminado exitosamente.')
-
-        return redirect(url_for('proveedores_list'))
-
-    # Acción de ver (GET request)
-    proveedores = Proveedor.query.all()
+            return redirect(url_for('proveedor_list'))
     return render_template('proveedor_list.html', proveedores=proveedores)
 
+@app.route('/proveedor/editar/<int:id>', methods=['POST'])
+def editar_proveedor(id):
+    proveedor = Proveedor.query.get(id)
+    if proveedor:
+        proveedor.razon_social = request.form['razon_social']
+        proveedor.telefono = request.form['telefono']
+        proveedor.mail = request.form['mail']
+        proveedor.cuit = request.form['cuit']
+        db.session.commit()
+    return redirect(url_for('proveedor_list'))
+
+@app.route('/proveedor/eliminar/<int:id>', methods=['POST'])
+def eliminar_proveedor(id):
+    proveedor = Proveedor.query.get(id)
+    if proveedor:
+        db.session.delete(proveedor)
+        db.session.commit()
+    return redirect(url_for('proveedor_list'))
 
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
