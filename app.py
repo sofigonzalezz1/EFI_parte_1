@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 
 
 
-from models import db, Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo, Proveedor
+from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo, Proveedor
 
 
 @app.route('/')
@@ -114,10 +114,9 @@ def modelos():
     marcas = Marca.query.all()
     if request.method=="POST":
         nombre = request.form["nombre"]
-        anio = request.form["anio_fabricacion"]
         marca_id = request.form["marca_id"]
 
-        print(f"Datos recibidos: nombre={nombre}, anio_fabricacion={anio}, marca_id={marca_id}")
+        print(f"Datos recibidos: nombre={nombre}, marca_id={marca_id}")
 
         if not nombre or not marca_id:
             return "Datos incompletos", 400
@@ -129,7 +128,6 @@ def modelos():
             
             modelo_nuevo = Modelo(
                 nombre=nombre,
-                anio_fabricacion=anio,
                 marca_id=marca_id
             )
             db.session.add(modelo_nuevo)

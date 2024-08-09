@@ -6,7 +6,7 @@
         <div class="col-6">
             <h4> Crear una nuevo modelo</h4>
             <form action="" method="post">
-                <input type="text" name="nombre" class="form-control nb-2" placeholder="Nombre del modelo"><!--nb-2 agrega margen-->
+                <input type="text" name="nombre" class="form-control nb-2" placeholder="Nombre del modelo">
                 <select name="marca_id" class="form-control mb-2">
                 {% for marca in marcas %}
                     <option value="{{ marca.id }}">{{ marca.nombre }}</option>
