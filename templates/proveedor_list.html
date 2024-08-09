@@ -9,8 +9,8 @@
                 <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre del proveedor"><!--nb-2 agrega margen-->
                 <select name="fabricante:id" class="form-control mb-2">
                 
-                {% for fabricante in fabricantes %}
-                    <option value="{{ fabricante.id }}">{{ fabricante.nombre }}</option>
+                {% for marca in marcas %}
+                    <option value="{{ marca.id }}">{{ marca.fabricante.nombre }}</option>
                 {% endfor %}
 
                 </select>
@@ -20,8 +20,8 @@
         </div>
         <div class="col-6">
             <h4>Listado de Vehiculos</h4>
-            {% for marca in marcas %}
-                <li> {{marca.nombre}}-{{marca.fabricante.nombre}}-{{marca.fabricante.pais}}</li>
+            {% for proveedor in proveedores %}
+                <li> {{proveedor.nombre}}-{{proveedor.marca}}</li>
             {% endfor %}
         </div>
     </div>

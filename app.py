@@ -73,7 +73,7 @@ def modelos():
         db.session.add(modelo_nuevo)
         db.session.commit()
         return redirect (url_for("modelos"))
-    return render_template('modelo_list.html', modelos = modelos, modelo_nuevo = modelo_nuevo, marcas = marcas)
+    return render_template('modelo_list.html', modelos = modelos, marcas = marcas)
         
 
 @app.route('/proveedor_list', methods=["POST","GET"])

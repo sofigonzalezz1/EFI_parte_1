@@ -41,8 +41,6 @@ class Marca(db.Model):
     fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
     fabricante = db.relationship("Fabricante", backref=db.backref("marcas", lazy=True))
     
-    def __str__(self):
-        return self.nombre
 
 class Caracteristica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
