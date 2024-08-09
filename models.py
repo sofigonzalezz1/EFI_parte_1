@@ -91,3 +91,7 @@ class Persona(db.Model):
     fecha_nacimiento = db.Column(db.Date, nullable=False)
     documento = db.Column(db.String(20), nullable=False)
     genero = db.Column(db.String(10), nullable=False)
+
+class Categoria(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)

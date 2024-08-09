@@ -78,6 +78,8 @@ def fabricantes():
     if request.method == 'POST':
         fabricante_nombre = request.form['nombre']
         pais_id = request.form['pais']
+        if not fabricante_nombre or not pais_id:
+            return "Datos incompletos", 400
         nuevo_fabricante = Fabricante(nombre=fabricante_nombre, pais_id=pais_id)
         db.session.add(nuevo_fabricante)
         db.session.commit()
@@ -90,13 +92,18 @@ def marcas():
     fabricantes = Fabricante.query.all()
     if request.method=="POST":
         nombre = request.form["nombre"]
-        fabricante = request.form["fabricante"]
-        nueva_marca = Marca(
-            nombre = nombre,
-            fabricante_id = fabricante,
-        )
-        db.session.add(nueva_marca)
-        db.session.commit()
+        fabricante_id = request.form["fabricante_id"]
+        if not nombre or not fabricante_id:
+            return "Datos incompletos", 400
+        
+        try:
+            fabricante_id = int(fabricante_id)  # Asegurarse de que el ID del fabricante es un entero
+            nueva_marca = Marca(nombre=nombre, fabricante_id=fabricante_id)
+            db.session.add(nueva_marca)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return str(e), 500
         return redirect(url_for("marcas"))
     return render_template('marca_list.html', marcas = marcas, fabricantes = fabricantes)
 
