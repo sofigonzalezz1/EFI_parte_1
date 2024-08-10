@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 
 
 
-from models import db, Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo, Proveedor
+from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo, Proveedor
 
 
 @app.route('/')
@@ -114,10 +114,9 @@ def modelos():
     marcas = Marca.query.all()
     if request.method=="POST":
         nombre = request.form["nombre"]
-        anio = request.form["anio_fabricacion"]
         marca_id = request.form["marca_id"]
 
-        print(f"Datos recibidos: nombre={nombre}, anio_fabricacion={anio}, marca_id={marca_id}")
+        print(f"Datos recibidos: nombre={nombre}, marca_id={marca_id}")
 
         if not nombre or not marca_id:
             return "Datos incompletos", 400
@@ -129,7 +128,6 @@ def modelos():
             
             modelo_nuevo = Modelo(
                 nombre=nombre,
-                anio_fabricacion=anio,
                 marca_id=marca_id
             )
             db.session.add(modelo_nuevo)
@@ -144,32 +142,42 @@ def modelos():
         
 
 @app.route('/proveedor_list', methods=["POST","GET"])
-def proveedores():
+def proveedor_list():
     proveedores = Proveedor.query.all()
-    personas = Persona.query.all()
-    
-    if request.method == "POST":
-        persona = request.form["persona"]
-        razon_social = request.form["nombre"]
-        telefono = request.form["telefono"]
-        mail = request.form["contacto"]
-        cuit=request.form["cuit"] 
-        condicion_iva= request.form["condicion_iva"]
-        producto= request.form["producto"]
-        proveedor_nuevo=Proveedor(
-            persona=persona,
-            razon_social=razon_social,
-            telefono=telefono,
-            mail=mail,
-            cuit=cuit,
-            condicion_iva=condicion_iva,
-            producto=producto,
-        )
-        db.session.add(proveedor_nuevo)
-        db.session.commit()
-        return redirect(url_for("proveedores"))
-    return render_template('proveedor_list.html', proveedores = proveedores, personas = personas)
+    if request.method == 'POST':
+            nueva_razon_social = request.form['razon_social']
+            nuevo_telefono = request.form['telefono']
+            nuevo_mail = request.form['mail']
+            nuevo_cuit = request.form['cuit']
+            nuevo_proveedor = Proveedor(
+                razon_social=nueva_razon_social,
+                telefono=nuevo_telefono,
+                mail=nuevo_mail,
+                cuit=nuevo_cuit,
+            )
+            db.session.add(nuevo_proveedor)
+            db.session.commit()
+            return redirect(url_for('proveedor_list'))
+    return render_template('proveedor_list.html', proveedores=proveedores)
 
+@app.route('/proveedor/editar/<int:id>', methods=['POST'])
+def editar_proveedor(id):
+    proveedor = Proveedor.query.get(id)
+    if proveedor:
+        proveedor.razon_social = request.form['razon_social']
+        proveedor.telefono = request.form['telefono']
+        proveedor.mail = request.form['mail']
+        proveedor.cuit = request.form['cuit']
+        db.session.commit()
+    return redirect(url_for('proveedor_list'))
+
+@app.route('/proveedor/eliminar/<int:id>', methods=['POST'])
+def eliminar_proveedor(id):
+    proveedor = Proveedor.query.get(id)
+    if proveedor:
+        db.session.delete(proveedor)
+        db.session.commit()
+    return redirect(url_for('proveedor_list'))
 
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
