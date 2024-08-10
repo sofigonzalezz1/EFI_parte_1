@@ -25,8 +25,11 @@ class Equipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'), nullable=False)
+    fabricante_id = db.Column(db.Integer, db.ForeignKey("fabricante.id"), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
     costo = db.Column(db.Integer, nullable=False)
+    modelo = db.relationship('Modelo', backref=db.backref('modelos', lazy=True))
+    fabricante = db.relationship('Fabricante', backref=db.backref('fabricantes', lazy=True))
 
 class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)

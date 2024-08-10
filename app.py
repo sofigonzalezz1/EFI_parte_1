@@ -23,7 +23,28 @@ def index():
 @app.route('/equipos_list', methods=["POST","GET"])
 def equipos():
     equipos = Equipo.query.all()
-    return render_template('equipos_list.html')
+    modelos = Modelo.query.all()
+    fabricantes = Fabricante.query.all()
+    equipo_nuevo = None
+    if request.method == 'POST':
+        nombre = request.form["nombre"]
+        categoria = request.form["categoria"]
+        costo = request.form["costo"]
+        modelo_id = request.form["modelos"]
+        fabricante_id = request.form["fabricantes"]
+        try:
+            fabricante_id = int(fabricante_id)  # Asegurarse de que el ID del fabricante es un entero
+            modelo_id = int(modelo_id)
+            equipo_nuevo = Equipo(nombre = nombre, categoria = categoria, costo = costo, modelo_id = modelo_id, fabricante_id = fabricante_id)
+            db.session.add(equipo_nuevo)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return str(e), 500
+        
+        return redirect (url_for("equipos"))
+    
+    return render_template('equipos_list.html', equipos=equipos, modelos = modelos, fabricantes = fabricantes, equipo_nuevo = equipo_nuevo)
 
 @app.route('/accesorio_list', methods=['POST', 'GET'])
 def accesorios():
