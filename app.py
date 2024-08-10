@@ -15,6 +15,46 @@ migrate = Migrate(app, db)
 
 from models import Marca, Pais, Caracteristica, Stock, Accesorio, Persona, Fabricante, Equipo, Modelo, Proveedor
 
+first_request = True
+
+@app.before_request
+def before_first_request():
+    global first_request
+    if first_request:
+        initialize_database()
+        first_request = False
+
+def initialize_database():
+    db.create_all()  # Crear todas las tablas
+    actualizar_paises()  # Verificar y actualizar los países
+
+def actualizar_paises():
+    # Lista de países que deberían estar en la base de datos
+    paises_deseados = [
+        'Argentina',
+        'Brasil',
+        'Chile',
+        'Colombia',
+        'México',
+        'Perú',
+        'Uruguay',
+        'Japon',
+        'Estados Unidos',
+        'China'
+    ]
+    
+    # Obtener los nombres de los países que ya están en la base de datos
+    paises_existentes = {pais.nombre for pais in Pais.query.all()}
+    
+    # Insertar los países que faltan
+    for nombre_pais in paises_deseados:
+        if nombre_pais not in paises_existentes:
+            nuevo_pais = Pais(nombre=nombre_pais)
+            db.session.add(nuevo_pais)
+            print(f"Agregado país: {nombre_pais}")
+    
+    db.session.commit()
+    print("Verificación y actualización de países completada.")
 
 @app.route('/')
 def index():
