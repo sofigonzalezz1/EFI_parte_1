@@ -54,10 +54,11 @@ class Caracteristica(db.Model):
 
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=True)
+    equipo_id = db.Column(db.Integer, db.ForeignKey('equipo.id'), nullable=False)
     cantidad_disponible = db.Column(db.Integer, nullable=False)
     cantidad_minima = db.Column(db.Integer, nullable=False)
     ubicacion_almacen = db.Column(db.String(100), nullable=False)
+    equipo = db.relationship('Equipo', backref=db.backref('stocks', lazy=True))
 
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)

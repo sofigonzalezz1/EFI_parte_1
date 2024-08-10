@@ -204,14 +204,29 @@ def eliminar_proveedor(id):
 def stock():
     equipos = Equipo.query.all()
     stocks = Stock.query.all()
+
     if request.method == 'POST':
-        equipo_id = request.form['equipo_id']
-        cantidad_disponible = request.form['cantidad_disponible']
-        cantidad_minima = request.form['cantidad_minima']
-        ubicacion_almacen = request.form['ubicacion_almacen']
-        nuevo_stock = Stock(cantidad_disponible=cantidad_disponible, cantidad_minima=cantidad_minima, ubicacion_almacen=ubicacion_almacen)
-        db.session.add(nuevo_stock)
-        db.session.commit()
+        equipo_id = request.form.get('equipo_id')
+        cantidad_disponible = request.form.get('cantidad_disponible')
+        cantidad_minima = request.form.get('cantidad_minima')
+        ubicacion_almacen = request.form.get('ubicacion_almacen')
+
+        if equipo_id:
+            equipo_id = int(equipo_id)
+            # Aquí se pasa equipo_id al constructor de Stock
+            nuevo_stock = Stock(
+                equipo_id=equipo_id,
+                cantidad_disponible=cantidad_disponible,
+                cantidad_minima=cantidad_minima,
+                ubicacion_almacen=ubicacion_almacen
+            )
+            db.session.add(nuevo_stock)
+            db.session.commit()
+        else:
+            flash('Por favor selecciona un equipo válido.', 'error')
+
         return redirect(url_for('stock'))
+
     return render_template('stock.html', stocks=stocks, equipos=equipos)
+
 
