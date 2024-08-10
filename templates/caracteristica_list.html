@@ -15,23 +15,18 @@
         </select>
     </form>
 
-    {% if caracteristicas %}
-        <h2>Características del equipo seleccionado</h2>
-        <table>
-            <tr>
-                <th>Característica</th>
-                <th>Descripción</th>
-            </tr>
-            {% for caracteristica in caracteristicas %}
-            <tr>
-                <td>{{ caracteristica.caracteristicas }}</td>
-                <td>{{ caracteristica.descripcion }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No hay características disponibles para el equipo seleccionado.</p>
-    {% endif %}
+    {% if selected_equipo_id %}
+    <h2>Características del equipo seleccionado</h2>
+    <ul>
+        {% for caracteristica in caracteristicas %}
+            <li>{{ caracteristica.equipo.nombre }}</li>
+            <li>{{ caracteristica.caracteristicas }}: {{ caracteristica.descripcion }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Selecciona un equipo para ver sus características.</p>
+{% endif %}
+
 
     {% if selected_equipo_id %}
     <h2>Agregar nueva característica</h2>

@@ -23,9 +23,10 @@
             <th>Accesorios</th>
             <th>Compatibilidad</th>
         </tr>
-        {% for accesorio in Accesorios %}
+        {% for accesorio in accesorios %}
         <tr>
-            <td>{{ accesorio.accesorios }}</td>
+            <td>{{ accesorio.equipo.nombre }}</td>
+            <td>{{ accesorio.nombre }}</td>
             <td>{{ 'Compatible' if accesorio.compatibilidad else 'No compatible' }}</td>
         </tr>
         {% endfor %}

@@ -57,7 +57,7 @@ def accesorios():
         equipo_id = request.form.get('Equipos')
 
         nuevo_accesorio = Accesorio(
-            accesorio=nombre,
+            nombre=nombre,
             compatibilidad=compatibilidad,
             equipo_id=equipo_id
         )
@@ -71,7 +71,7 @@ def accesorios():
 @app.route('/caracteristica_list', methods=['POST', 'GET'])
 def caracteristicas():
     equipos = Equipo.query.all()
-    caracteristicas = []
+    caracteristicas = Caracteristica.query.all()
     selected_equipo_id = None
 
     if request.method == 'POST':
