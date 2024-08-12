@@ -28,7 +28,10 @@
             <h4>Listado de Vehiculos</h4>
             {% for marca in marcas %}
                 <li> 
-                    <a href="/marca/{{marca.id}}/modelos"> {{marca.nombre}} </a>                 
+                    <a href="/marca/{{marca.id}}/modelos"> {{marca.nombre}} </a> 
+                    <form action="{{ url_for('eliminar_marca', id=marca.id) }}" method="post" style="display:inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>                
                 </li>
             {% endfor %}
         </div>

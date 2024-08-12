@@ -62,9 +62,9 @@ def index():
 
 @app.route('/equipos_list', methods=["POST","GET"])
 def equipos():
-    equipos = Equipo.query.all()
-    modelos = Modelo.query.all()
-    fabricantes = Fabricante.query.all()
+    equipos = Equipo.query.filter_by(activo=True).all()
+    modelos = Modelo.query.filter_by(activo=True).all()
+    fabricantes = Fabricante.query.filter_by(activo=True).all()
     equipo_nuevo = None
     if request.method == 'POST':
         nombre = request.form["nombre"]
@@ -86,10 +86,18 @@ def equipos():
     
     return render_template('equipos_list.html', equipos=equipos, modelos = modelos, fabricantes = fabricantes, equipo_nuevo = equipo_nuevo)
 
+@app.route('/eliminar_equipo/<int:id>', methods=['POST'])
+def eliminar_equipo(id):
+    equipo = Equipo.query.get_or_404(id)
+    equipo.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('equipos'))
+
+
 @app.route('/accesorio_list', methods=['POST', 'GET'])
 def accesorios():
-    equipos = Equipo.query.all()
-    accesorios = Accesorio.query.all()
+    equipos = Equipo.query.filter_by(activo=True).all()
+    accesorios = Accesorio.query.filter_by(activo=True).all()
 
     if request.method == 'POST':
         nombre = request.form.get('nombre')
@@ -108,10 +116,17 @@ def accesorios():
 
     return render_template('accesorio_list.html', accesorios=accesorios, equipos=equipos)
 
+@app.route('/eliminar_accesorio/<int:id>', methods=['POST'])
+def eliminar_accesorio(id):
+    accesorio = Accesorio.query.get_or_404(id)
+    accesorio.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('accesorios'))
+
 @app.route('/caracteristica_list', methods=['POST', 'GET'])
 def caracteristicas():
-    equipos = Equipo.query.all()
-    caracteristicas = Caracteristica.query.all()
+    equipos = Equipo.query.filter_by(activo=True).all()
+    caracteristicas = Caracteristica.query.filter_by(activo=True).all()
     selected_equipo_id = None
 
     if request.method == 'POST':
@@ -132,10 +147,17 @@ def caracteristicas():
 
     return render_template('caracteristica_list.html', equipos=equipos, caracteristicas=caracteristicas, selected_equipo_id=selected_equipo_id)
 
+@app.route('/eliminar_caracteristica/<int:id>', methods=['POST'])
+def eliminar_caracteristica(id):
+    caracteristica = Caracteristica.query.get_or_404(id)
+    caracteristica.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('caracteristicas'))
+
 @app.route('/fabricante_list', methods=['POST', 'GET'])
 def fabricantes():
-    fabricantes = Fabricante.query.all()
-    paises = Pais.query.all()
+    fabricantes = Fabricante.query.filter_by(activo=True).all()
+    paises = Pais.query.filter_by(activo=True).all()
     if request.method == 'POST':
         fabricante_nombre = request.form['nombre']
         pais_id = request.form['pais']
@@ -147,10 +169,18 @@ def fabricantes():
         return redirect(url_for('fabricantes'))
     return render_template('fabricante_list.html', fabricantes=fabricantes, paises=paises)
 
+@app.route('/eliminar_fabricante/<int:id>', methods=['POST'])
+def eliminar_fabricante(id):
+    fabricante = Fabricante.query.get_or_404(id)
+    fabricante.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('fabricantes'))
+
+
 @app.route('/marca_list', methods=["POST","GET"])
 def marcas():
-    marcas = Marca.query.all()
-    fabricantes = Fabricante.query.all()
+    marcas = Marca.query.filter_by(activo=True).all()
+    fabricantes = Fabricante.query.filter_by(activo=True).all()
     if request.method=="POST":
         nombre = request.form["nombre"]
         categoria = request.form["categoria"]
@@ -169,10 +199,18 @@ def marcas():
         return redirect(url_for("marcas"))
     return render_template('marca_list.html', marcas = marcas, fabricantes = fabricantes)
 
+@app.route('/eliminar_marca/<int:id>', methods=['POST'])
+def eliminar_marca(id):
+    marca = Marca.query.get_or_404(id)
+    marca.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('marcas'))
+
+
 @app.route('/modelo_list', methods=["POST","GET"])
 def modelos():
-    modelos = Modelo.query.all()
-    marcas = Marca.query.all()
+    modelos = Modelo.query.filter_by(activo=True).all()
+    marcas = Marca.query.filter_by(activo=True).all()
     if request.method=="POST":
         nombre = request.form["nombre"]
         marca_id = request.form["marca_id"]
@@ -201,10 +239,16 @@ def modelos():
     
     return render_template('modelo_list.html', modelos=modelos, marcas=marcas)
         
+@app.route('/eliminar_modelo/<int:id>', methods=['POST'])
+def eliminar_modelo(id):
+    modelo = Modelo.query.get_or_404(id)
+    modelo.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('modelos'))
 
 @app.route('/proveedor_list', methods=["POST","GET"])
 def proveedor_list():
-    proveedores = Proveedor.query.all()
+    proveedores = Proveedor.query.filter_by(activo=True).all()
     if request.method == 'POST':
             nueva_razon_social = request.form['razon_social']
             nuevo_telefono = request.form['telefono']
@@ -221,6 +265,13 @@ def proveedor_list():
             return redirect(url_for('proveedor_list'))
     return render_template('proveedor_list.html', proveedores=proveedores)
 
+@app.route('/eliminar_proveedor/<int:id>', methods=['POST'])
+def eliminar_proveedor(id):
+    proveedor = Proveedor.query.get_or_404(id)
+    proveedor.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('proveedores'))
+
 @app.route('/proveedor/editar/<int:id>', methods=['POST'])
 def editar_proveedor(id):
     proveedor = Proveedor.query.get(id)
@@ -232,18 +283,10 @@ def editar_proveedor(id):
         db.session.commit()
     return redirect(url_for('proveedor_list'))
 
-@app.route('/proveedor/eliminar/<int:id>', methods=['POST'])
-def eliminar_proveedor(id):
-    proveedor = Proveedor.query.get(id)
-    if proveedor:
-        db.session.delete(proveedor)
-        db.session.commit()
-    return redirect(url_for('proveedor_list'))
-
 @app.route('/stock', methods=['GET', 'POST'])
 def stock():
-    equipos = Equipo.query.all()
-    stocks = Stock.query.all()
+    equipos = Equipo.query.filter_by(activo=True).all()
+    stocks = Stock.query.filter_by(activo=True).all()
 
     if request.method == 'POST':
         equipo_id = request.form.get('equipo_id')
@@ -269,4 +312,10 @@ def stock():
 
     return render_template('stock.html', stocks=stocks, equipos=equipos)
 
+@app.route('/eliminar_stock/<int:id>', methods=['POST'])
+def eliminar_stock(id):
+    stock = Stock.query.get_or_404(id)
+    stock.activo = False  # Marca como inactivo en lugar de eliminar
+    db.session.commit()
+    return redirect(url_for('stock'))
 

@@ -32,6 +32,11 @@
                     <td>{{ stock.cantidad_disponible }}</td>
                     <td>{{ stock.cantidad_minima }}</td>
                     <td>{{ stock.ubicacion_almacen }}</td>
+                    <td>
+                    <form action="{{ url_for('eliminar_stock', id=stock.id) }}" method="post" style="display:inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>         
                 </tr>
             {% endfor %}
         </tbody>

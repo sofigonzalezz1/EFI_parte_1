@@ -28,6 +28,11 @@
             <td>{{ accesorio.equipo.nombre }}</td>
             <td>{{ accesorio.nombre }}</td>
             <td>{{ 'Compatible' if accesorio.compatibilidad else 'No compatible' }}</td>
+            <td>
+            <form action="{{ url_for('eliminar_accesorio', id=accesorio.id) }}" method="post" style="display:inline;">
+                <button type="submit">Eliminar</button>
+            </form>
+            </td>
         </tr>
         {% endfor %}
     </table>

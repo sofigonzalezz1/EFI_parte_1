@@ -14,7 +14,11 @@
     <h2>Lista de Fabricantes</h2>
     <ul>
         {% for fabricante in fabricantes %}
-            <li>{{ fabricante.nombre }} ({{ fabricante.pais.nombre }})</li>
+            <li>{{ fabricante.nombre }} ({{ fabricante.pais.nombre }})
+                <form action="{{ url_for('eliminar_fabricante', id=fabricante.id) }}" method="post" style="display:inline;">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %} 
